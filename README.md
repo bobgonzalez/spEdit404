@@ -1,5 +1,5 @@
 # spEdit404
-spEdit is a tool for modifying and creating binary pattern files for the Roland SP-404SX. For more information check out my series of blog posts about the sp404SX pattern format and the spEdit tool [spEdit blog posts!](http://byteflip.club/categories/sp-edit)
+spEdit is a tool for modifying and creating binary pattern files for the Roland SP-404SX. For more information check out my series of blog posts about the sp404SX pattern format and the spEdit tool : [spEdit blog posts!](http://byteflip.club/categories/sp-edit)
 
 
 ![Alt Text](https://i.imgur.com/dyEjnFO.png)
