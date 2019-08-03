@@ -1,4 +1,4 @@
-from note import *
+from .note import *
 
 '''
 Bars should be start padded with an empty note

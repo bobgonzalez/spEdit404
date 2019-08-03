@@ -1,10 +1,10 @@
 import binascii
 from itertools import islice
-from bar import *
+from .bar import *
 import copy
 import os
-import constants
-from timer import Timer
+from . import constants
+from .timer import Timer
 
 
 class Pattern():

@@ -1,6 +1,6 @@
-from pattern import *
+from bin_interpreter.pattern import *
 from wave_test import *
-from note import *
+from bin_interpreter.note import *
 
 import wave
 import math
