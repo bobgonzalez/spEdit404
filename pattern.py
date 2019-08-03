@@ -3,13 +3,17 @@ from itertools import islice
 from bar import *
 import copy
 import os
+import constants
+from timer import Timer
+
 
 class Pattern():
     def __init__(self, length):
         self.length = int(length)
         self.time = 0
-        self.ticks = length * 384
+        self.ticks = length * constants.ticks_per_bar
         self.score = []
+        self.bpm = 95
         for i in range(length):
             self.score.append(Bar())
 
@@ -18,6 +22,11 @@ class Pattern():
             b = copy.deepcopy(self.score[i])
             self.score.append(b)
         self.length *= 2
+
+    def set_bpm(self, bpm):
+        for bar in self.score:
+            for note in bar.notes:
+                note.set_bpm(Timer(bpm))
 
     def change_note_velocity(self, bank, pad, bar, index, velocity):
         self.score[bar - 1].change_note_velocity(bank, pad, index, velocity)
@@ -60,11 +69,16 @@ class Pattern():
             hexdata = binascii.hexlify(f.read())
         #hexlist = map(''.join, zip(hexdata[::2], hexdata[1::2]))
         split_list = list(self.chunk(hexdata, 16))
-        note_list = split_list[:-2]
-        self.length = int(str(split_list[-1][2] + split_list[-1][3]), 16)
+        sl = []
+        for i, l in enumerate(split_list):
+            sl.append(list(chr(i) for i in l))
+        #    for j, asci in enumerate(l):
+        #        split_list[i][j] == chr(asci)
+        note_list = sl[:-2]
+        self.length = int(str(sl[-1][2] + sl[-1][3]), 16)
         self.score = []
         for i in range(self.length):
-            self.score.append(Bar())
+            self.score.append(Bar(0))
         ctime = 0
         miss = 0
         bar = 0

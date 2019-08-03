@@ -4,6 +4,8 @@ from note import *
 Bars should be start padded with an empty note
 Bars last notes nextnote value should not extend past end of bar, use start padding
 '''
+
+
 class Bar():
     def __init__(self):
         self.table = []
