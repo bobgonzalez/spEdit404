@@ -122,6 +122,6 @@ def read_pattern(bank_letter, pad_number):
     return pattern
 
 
-def chunk(self, it, size):
-    it = iter(it)
-    return iter(lambda: tuple(islice(it, size)), ())
+def chunk(data, size):
+    data = iter(data)
+    return iter(lambda: tuple(islice(data, size)), ())
