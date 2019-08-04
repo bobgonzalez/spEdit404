@@ -31,8 +31,10 @@ class Note:
             self.pad = pad
         else:
             raise ValueError(f'pad must be integer between 1-{constants.pads_per_bank}')
-        # TODO write bank validation
-        self.bank = bank
+        if 0 < ord(bank.lower())-constants.ascii_character_offset < 9:
+            self.bank = bank
+        else:
+            raise ValueError('bank must be a letter between a-h')
         if start_tick >= 0 and type(start_tick) == int:
             self.start_tick = start_tick
         else:
