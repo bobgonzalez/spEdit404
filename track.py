@@ -1,5 +1,5 @@
 import copy
-from . import constants
+from bin_interpreter import constants
 
 class Pattern:
     def __init__(self, length):
@@ -11,7 +11,7 @@ class Pattern:
         notes_to_add = copy.deepcopy(other.notes)
         for note in notes_to_add:
             note.time_start = note.time_start + (self.length*constants.ticks_per_bar)
-        new_pattern.notes = sorted(self.notes+other.notes, key=lambda n: n.time_start)
+        new_pattern.notes = sorted(self.notes+other.notes, key=lambda n: n.start_tick)
         return new_pattern
 
     def __len__(self):
@@ -20,7 +20,7 @@ class Pattern:
     def add_note(self, note):
         if note.start_tick < self.length*constants.ticks_per_bar:
             self.notes.append(note)
-            self.notes = sorted(self.notes, key=lambda note: note.time_start)
+            self.notes = sorted(self.notes, key=lambda note: note.start_tick)
         else:
             raise ValueError('note must start before the pattern ends')
 
@@ -34,8 +34,8 @@ class Note:
             self.pad = pad
         else:
             raise ValueError(f'pad must be integer between 1-{constants.pads_per_bank}')
-        if 0 < ord(bank.lower())-constants.ascii_character_offset < 9:
-            self.bank = bank
+        if 0 <= ord(bank.lower())-constants.ascii_character_offset < 8:
+            self.bank = bank.lower()
         else:
             raise ValueError('bank must be a letter between a-h')
         if start_tick >= 0 and type(start_tick) == int:
@@ -50,3 +50,12 @@ class Note:
             self.velocity = velocity
         else:
             raise ValueError(f'velocity must be integer between 1-{constants.max_velocity}')
+
+    def __eq__(self, other):
+        if not isinstance(other, Note):
+            return NotImplemented
+        return (self.pad == other.pad
+                and self.bank == other.bank
+                and self.start_tick == other.start_tick
+                and self.length == other.length
+                and self.velocity == other.velocity)
