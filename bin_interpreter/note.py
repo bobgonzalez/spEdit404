@@ -1,5 +1,5 @@
 from pydub import AudioSegment
-from .constants import *
+from . import constants
 from .timer import Timer
 
 
