@@ -30,6 +30,9 @@ class TestTrack(unittest.TestCase):
     def test_cant_add_note_length_past_pattern_length(self):
         pass
 
+    def test_cant_add_note_causing_13_tracks(self):
+        pass
+
     def create_dumb_note(self, **kwargs):
         return track.Note(pad=kwargs.get('pad', 1), bank=kwargs.get('bank', 'a'),
                           start_tick=kwargs.get('start_tick', 0), length=kwargs.get('length', 60),
