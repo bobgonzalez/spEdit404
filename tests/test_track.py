@@ -1,28 +1,33 @@
 import unittest
-from bin_interpreter import track
+from track import Note, Pattern
+
 
 class TestTrack(unittest.TestCase):
 
-    def __init__(self):
-        self.pattern = track.Pattern(1)
+    def set_up(self):
+        self.pattern = Pattern(1)
 
     def test_cant_create_note_out_of_velocity_bounds(self):
-        pass
+        self.assertRaises(ValueError, Note, 1, 'a', 0, 60, 128)
+        self.assertRaises(ValueError, Note, 1, 'a', 0, 60, -1)
 
     def test_cant_create_note_out_of_bank_bounds(self):
-        pass
+        self.assertRaises(ValueError, Note, 1, 'i', 0, 60, 10)
 
     def test_cant_create_note_out_of_pad_bounds(self):
-        pass
+        self.assertRaises(ValueError, Note, -1, 'a', 0, 60, 10)
+        self.assertRaises(ValueError, Note, 13, 'a', 0, 60, 10)
 
     def test_cant_create_note_negative_start(self):
-        pass
+        self.assertRaises(ValueError, Note, 1, 'a', -10, 60, 10)
 
     def test_cant_create_note_negative_length(self):
-        pass
+        self.assertRaises(ValueError, Note, 1, 'a', 10, -60, 10)
 
     def test_pattern_add_note(self):
-        pass
+        self.set_up()
+        self.pattern.add_note(self.create_dumb_note())
+        self.assertEquals(self.pattern.notes[0], self.create_dumb_note())
 
     def test_cant_add_note_start_past_pattern_length(self):
         pass
@@ -34,7 +39,7 @@ class TestTrack(unittest.TestCase):
         pass
 
     def create_dumb_note(self, **kwargs):
-        return track.Note(pad=kwargs.get('pad', 1), bank=kwargs.get('bank', 'a'),
+        return Note(pad=kwargs.get('pad', 1), bank=kwargs.get('bank', 'a'),
                           start_tick=kwargs.get('start_tick', 0), length=kwargs.get('length', 60),
                           velocity=kwargs.get('velocity', 127))
 
