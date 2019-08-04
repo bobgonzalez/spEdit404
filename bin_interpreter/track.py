@@ -27,8 +27,21 @@ class Pattern:
 
 class Note:
     def __init__(self, pad, bank, start_tick, length, velocity):
-        self.pad = pad
+        if 0 < pad <= 12 and type(start_tick) == int:
+            self.pad = pad
+        else:
+            raise ValueError("pad must be integer between 1-12")
+        # TODO write bank validation
         self.bank = bank
-        self.start_tick = start_tick
-        self.length = length
-        self.velocity = velocity
+        if start_tick >= 0 and type(start_tick) == int:
+            self.start_tick = start_tick
+        else:
+            raise ValueError("start_tick must be a positive integer")
+        if length >= 0 and type(length) == int:
+            self.length = length
+        else:
+            raise ValueError("length must be a positive integer")
+        if 0 < velocity <= 127 and type(start_tick) == int:
+            self.velocity = velocity
+        else:
+            raise ValueError("velocity must be integer between 1-127")
