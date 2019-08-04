@@ -7,22 +7,25 @@ class TestTrack(unittest.TestCase):
     def set_up(self):
         self.pattern = Pattern(1)
 
+    def test_create_dumb_note(self):
+        self.create_dumb_note()
+
     def test_cant_create_note_out_of_velocity_bounds(self):
-        self.assertRaises(ValueError, Note, 1, 'a', 0, 60, 128)
-        self.assertRaises(ValueError, Note, 1, 'a', 0, 60, -1)
+        self.assertRaises(ValueError, self.create_dumb_note, velocity=128)
+        self.assertRaises(ValueError, self.create_dumb_note, velocity=-1)
 
     def test_cant_create_note_out_of_bank_bounds(self):
-        self.assertRaises(ValueError, Note, 1, 'i', 0, 60, 10)
+        self.assertRaises(ValueError, self.create_dumb_note, bank='i')
 
     def test_cant_create_note_out_of_pad_bounds(self):
-        self.assertRaises(ValueError, Note, -1, 'a', 0, 60, 10)
-        self.assertRaises(ValueError, Note, 13, 'a', 0, 60, 10)
+        self.assertRaises(ValueError, self.create_dumb_note, pad=-1)
+        self.assertRaises(ValueError, self.create_dumb_note, pad=13)
 
     def test_cant_create_note_negative_start(self):
-        self.assertRaises(ValueError, Note, 1, 'a', -10, 60, 10)
+        self.assertRaises(ValueError, self.create_dumb_note, start_tick=-1)
 
     def test_cant_create_note_negative_length(self):
-        self.assertRaises(ValueError, Note, 1, 'a', 10, -60, 10)
+        self.assertRaises(ValueError, self.create_dumb_note, length=-1)
 
     def test_pattern_add_note(self):
         self.set_up()
