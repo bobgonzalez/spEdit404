@@ -18,8 +18,11 @@ class Pattern:
         return self.length
 
     def add_note(self, note):
-        self.notes.append(note)
-        self.notes = sorted(self.notes, key=lambda note: note.time_start)
+        if note.start_tick < self.length*constants.ticks_per_bar:
+            self.notes.append(note)
+            self.notes = sorted(self.notes, key=lambda note: note.time_start)
+        else:
+            raise ValueError('note must start before the pattern ends')
 
     def delete_note(self, note_index):
         self.notes.pop(note_index)
