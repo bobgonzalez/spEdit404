@@ -7,11 +7,11 @@ class Pattern:
         self.notes = []
 
     def __add__(self, other):
-        new_pattern = Pattern2(len(self)+len(other))
+        new_pattern = Pattern(len(self)+len(other))
         notes_to_add = copy.deepcopy(other.notes)
         for note in notes_to_add:
             note.time_start = note.time_start + (self.length*384)
-        new_pattern.notes = sorted(self.notes+other.notes, key=lambda note: note.time_start)
+        new_pattern.notes = sorted(self.notes+other.notes, key=lambda n: n.time_start)
         return new_pattern
 
     def __len__(self):
