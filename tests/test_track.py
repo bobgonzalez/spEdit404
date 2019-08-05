@@ -33,13 +33,21 @@ class TestTrack(unittest.TestCase):
         self.assertEquals(self.pattern.notes[0], self.create_dumb_note())
 
     def test_cant_add_note_start_past_pattern_length(self):
-        pass
+        self.set_up()
+        self.assertRaises(ValueError, self.pattern.add_note, self.create_dumb_note(start_tick=384))
 
+    @unittest.skip("not sure how SP404-SX handles this need to do more research")
     def test_cant_add_note_length_past_pattern_length(self):
-        pass
+        self.set_up()
+        self.assertRaises(ValueError, self.pattern.add_note, self.create_dumb_note(start_tick=380, length=10))
 
     def test_cant_add_note_causing_13_tracks(self):
-        pass
+        self.set_up()
+        for i in range(13):
+            if i == 12:
+                self.assertRaises(ValueError, self.pattern.add_note, self.create_dumb_note())
+            else:
+               self.pattern.add_note(self.create_dumb_note())
 
     def create_dumb_note(self, **kwargs):
         return Note(pad=kwargs.get('pad', 1), bank=kwargs.get('bank', 'a'),
