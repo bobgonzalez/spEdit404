@@ -1,6 +1,6 @@
 from pydub import AudioSegment
 from pydub.playback import play
-from bin_interpreter import constants
+from spedit404 import constants
 
 
 def preview_pattern(pattern, bpm):

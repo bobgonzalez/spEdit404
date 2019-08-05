@@ -1,7 +1,7 @@
 import binascii
 from itertools import islice
-from . import constants
-from track import Pattern, Note
+from spedit404 import constants
+from spedit404.track import Pattern, Note
 
 
 def write_binary(pattern, bank_letter, pad_number):

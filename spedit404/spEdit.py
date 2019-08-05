@@ -1,11 +1,6 @@
 from bin_interpreter.pattern import *
 from wave_test import *
 from bin_interpreter.note import *
-
-import wave
-import math
-import struct
-import contextlib
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
 from os import *

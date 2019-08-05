@@ -3,7 +3,7 @@ from itertools import islice
 from .bar import *
 import copy
 import os
-from . import constants
+from spedit404 import constants
 from .timer import Timer
 
 

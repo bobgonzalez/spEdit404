@@ -1,5 +1,5 @@
 import copy
-from bin_interpreter import constants
+from spedit404 import constants
 
 class Pattern:
     def __init__(self, length):
