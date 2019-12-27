@@ -3,11 +3,6 @@ from binary_utilities import read_pattern
 from wave import *
 from utils import create_folder
 
-from pydub import AudioSegment
-from pydub.silence import split_on_silence
-from os import *
-import subprocess
-
 
 def menu():
     ret = "r : read pattern from binary\n" + "i : insert note\n" + "d : delete note\nD : clear all notes\n" + "v : change note velocities\n" + "h : change note length\n" + "l : set pattern length\n" + "m : double pattern\n" + "w : write pattern to binary\n" + "x : exit\n"
@@ -46,13 +41,13 @@ while True:
             try:
                 n4 = Note(pad, b, n, le, v)
             except Exception as e:
-                print("error creating note : 101")
                 e.printStackTrace()
+                print("error creating note : 101")
             try:
                 p.add_note(n4)
-            except:
-                print("error adding note : error 301")
+            except Exception as e:
                 e.printStackTrace()
+                print("error adding note : error 301")
         elif usr_in == 'pr':
             print(p)
         elif usr_in == "p":
@@ -80,85 +75,35 @@ while True:
             pad = input('enter pad > ')
             try:
                 p.write_binary(bank, pad)
-            except:
+            except Exception as e:
+                e.printStackTrace()
                 print("error writing binary : error 203")
         elif usr_in == 'r':
             bank = input('enter bank > ')
             pad = input('enter pad > ')
             try:
                 p.read_pattern(bank, pad)
-            except:
+            except Exception as e:
+                e.printStackTrace()
                 print("error reading binary : error 202")
             print(p)
         elif usr_in == 'l':
-            p.length = int(input('enter number of bars > '))
-            p.ticks = p.length * 384
+            p.change_length = int(input('enter number of bars > '))
             print(p)
         elif usr_in == 'd':
-            bank = input('enter bank > ')
-            pad = input('enter pad > ')
-            bn = int(input('enter bar # > '))
-            n = int(input('enter location x : x/16 > '))
+            track = input('enter track # 0-11 > ')
+            note = input('enter note # 0-n > ')
             try:
-                p.delete_note(bank, pad, bn, n)
-            except:
+                p.delete_note(track, note)
+            except Exception as e:
+                e.printStackTrace()
                 print("error deleting note : error 305")
             print(p)
         elif usr_in == 'D':
             p.clear_notes()
             print(p)
-        elif usr_in == 'v':
-            bank = input('enter bank > ')
-            pad = input('enter pad > ')
-            bn = int(input('enter bar # > '))
-            n = int(input('enter location x : x/16 > '))
-            v = int(input('enter new velocity 1- 127 > '))
-            try:
-                p.change_note_velocity(bank, pad, bn, n, v)
-            except:
-                print("error changing note velocity : error 306")
-            print(p)
-        elif usr_in == 'i':
-            b = input('enter bank > ')
-            pad = int(input('enter pad # > '))
-            v = int(input('enter velocity 0-127 > '))
-            le = int(input('enter length > '))
-            bn = int(input('enter bar # > '))
-            n = int(input('enter location x : x/16 > '))
-            try:
-                n4 = Note(b, pad, v, le, n + (bn - 1) * 16, int(n) * 24)
-            except:
-                print("error creating note : 101")
-            try:
-                p.add_note_at(n4, bn - 1, n)
-            except:
-                print("error adding note : error 302")
-            print(p)
-        elif usr_in == 'm':
-            p.double()
-            print(p)
-        elif usr_in == 'h':
-            bank = input('enter bank > ')
-            pad = input('enter pad > ')
-            bn = int(input('enter bar # > '))
-            n = int(input('enter location x : x/16 > '))
-            v = int(input('enter new length (384 ticks per bar) > '))
-            try:
-                p.change_note_length(bank, pad, bn, n, v)
-            except:
-                print("error changing note length : error 307")
-            print(p)
-        elif usr_in == 'wt':
-            b = input("g : generate wave\n" + "d : calculate duration\n" + "s : split on silence\n" + ' > ')
-            if b == 'g':
-                create_wave_sample()
-            elif b == 'd':
-                print(duration())
-            elif b == 'p':
-                preview_pat(p)
-            elif b == 's':
-                split_on_silence()
         elif usr_in == 'x':
             break
-    except:
+    except Exception as e:
+        e.printStackTrace()
         print("error reading input : error 201")

@@ -40,6 +40,13 @@ class Pattern:
     def delete_note(self, track_index, note_index):
         self.tracks[track_index].delete_note(note_index)
 
+    def change_length(self, new_length):
+        if 0 < new_length < 99:
+            for track in self.tracks:
+                track.length = new_length
+            self.length = new_length
+        raise ValueError('length must be between 1 and 99 bars')
+
 
 class Track:
     def __init__(self, length):
@@ -58,7 +65,7 @@ class Track:
         return self.length
 
     def __str__(self):
-        ret = ' ' * int((constants.ticks_per_bar*len(self))/constants.resolution)
+        ret = '.' * int((constants.ticks_per_bar*len(self))/constants.resolution)
         for note in self.notes:
             ret = ret[:int(note.start_tick/constants.resolution)] + str(note) + ret[int(note.end_tick/constants.resolution):]
         return ret

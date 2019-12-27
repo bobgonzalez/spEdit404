@@ -54,5 +54,8 @@ class TestTrack(unittest.TestCase):
                           start_tick=kwargs.get('start_tick', 0), length=kwargs.get('length', 60),
                           velocity=kwargs.get('velocity', 127))
 
+# TODO test setting and changing pattern length out of bounds 0<x<99
+# TODO seperate these tests into note, track, and pattern test classes
+
 if __name__ == '__main__':
     unittest.main()
