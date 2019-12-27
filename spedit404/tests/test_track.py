@@ -1,5 +1,5 @@
 import unittest
-from spedit404.track import Note, Pattern
+from track import Note, Pattern
 
 
 class TestTrack(unittest.TestCase):
