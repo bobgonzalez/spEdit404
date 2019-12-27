@@ -30,7 +30,7 @@ class TestTrack(unittest.TestCase):
     def test_pattern_add_note(self):
         self.set_up()
         self.pattern.add_note(self.create_dumb_note())
-        self.assertEquals(self.pattern.notes[0], self.create_dumb_note())
+        self.assertEqual(self.pattern.tracks[0].notes[0], self.create_dumb_note())
 
     def test_cant_add_note_start_past_pattern_length(self):
         self.set_up()
