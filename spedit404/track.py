@@ -1,6 +1,7 @@
 import constants
 
 import copy
+import os
 
 class Pattern:
     def __init__(self, length):
@@ -17,6 +18,12 @@ class Pattern:
 
     def __len__(self):
         return self.length
+
+    def __str__(self):
+        ret = ''
+        for track in self.tracks:
+            ret += f'{track}{os.linesep}'
+        return ret
 
     def add_note(self, new_note):
         if new_note.start_tick < self.length*constants.ticks_per_bar:
@@ -49,6 +56,12 @@ class Track:
 
     def __len__(self):
         return self.length
+
+    def __str__(self):
+        ret = ' ' * int((constants.ticks_per_bar*len(self))/constants.resolution)
+        for note in self.notes:
+            ret = ret[:int(note.start_tick/constants.resolution)] + str(note) + ret[int(note.end_tick/constants.resolution):]
+        return ret
 
     def add_note(self, new_note):
         if new_note.start_tick < self.length*constants.ticks_per_bar:
@@ -100,3 +113,6 @@ class Note:
                 and self.start_tick == other.start_tick
                 and self.length == other.length
                 and self.velocity == other.velocity)
+
+    def __str__(self):
+        return f"{self.bank}{self.pad}{'-' * int(self.length/constants.resolution)}"

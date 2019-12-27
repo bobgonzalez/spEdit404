@@ -1,4 +1,5 @@
 from track import Pattern, Note
+from binary_utilities import read_pattern
 from wave import *
 from utils import create_folder
 
@@ -25,11 +26,10 @@ if length != 'r':
     length = int(length)
     p = Pattern(length)
 else:
-    p = Pattern(1)
     bank = input('enter bank > ')
     pad = input('enter pad > ')
     try:
-        p.read_pattern(bank, pad)
+        p = read_pattern(bank, pad)
     except:
         print("error reading binary : error 202")
     print(p.print_pattern())
@@ -42,15 +42,17 @@ while True:
             pad = int(input('enter pad # > '))
             v = int(input('enter velocity 0-127 > '))
             le = int(input('enter length > '))
-            n = int(input('enter next note start > '))
+            n = int(input(f'enter note start 0-{384*len(p)}> '))
             try:
-                n4 = Note(b, pad, v, le, n, p.time)
-            except:
+                n4 = Note(pad, b, n, le, v)
+            except Exception as e:
                 print("error creating note : 101")
+                e.printStackTrace()
             try:
-                p.add_note(n4, len(p.score)-1, len(p.score[len(p.score)-1].notes))
+                p.add_note(n4)
             except:
                 print("error adding note : error 301")
+                e.printStackTrace()
         elif usr_in == 'pr':
             print(p.print_pattern())
         elif usr_in == "p":
