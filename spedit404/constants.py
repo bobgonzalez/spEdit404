@@ -7,3 +7,4 @@ secondary_bank_offset = 5
 pads_per_bank = 12
 pad_offset_magic_number = 46
 max_velocity = 127
+path_to_samples = "./SP-404SX/SMPL/"

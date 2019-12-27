@@ -1,26 +1,23 @@
+import constants
+from track import Pattern, Note
+from utils import remove_file, add_padding
+
 import binascii
 from itertools import islice
-from spedit404 import constants
-from spedit404.track import Pattern, Note
 
 
 def write_binary(pattern, bank_letter, pad_number):
     outputBIN = f'./export/PTN00{get_pad_code(bank_letter, pad_number)}.BIN'
     pattern_length_encoding = f'00 8C 00 00 00 00 00 00 \n00 {get_bar_code(pattern)} 00 00 00 00 00 00'
-    if os.path.exists('./test.txt'):
-        os.remove('./test.txt')
-    buffer_file = open('./test.txt', 'w+')
-    for i, note in enumerate(pattern.notes):
-        buffer_file.write(write_note(note, pattern.notes[i+1].start_tick))
-    buffer_file.write(str(pattern_length_encoding))
-    buffer_file.close()
-    with open('test.txt') as f, open(outputBIN, 'wb') as output_binary:
-        for line in f:
-            output_binary.write(
-                binascii.unhexlify(''.join(line.split()))
-            )
-    f.close()
-    output_binary.close()
+    remove_file('./test.txt')
+    with open('./test.txt', 'rw+') as buffer_file, open(outputBIN, 'wb') as output_binary:
+        for i, note in enumerate(pattern.notes):
+            write_hex(output_binary, write_note(note, pattern.notes[i+1].start_tick))
+        write_hex(output_binary, pattern_length_encoding)
+
+
+def write_hex(out_file, hex):
+    out_file.write(binascii.unhexlify(''.join(hex.split())))
 
 
 def write_note(note, next_note_start_tick):
@@ -32,8 +29,7 @@ def write_note(note, next_note_start_tick):
     else:
         next_note = str(hex(next_note))[2:]
     pad_code, bank_switch = gen_pad_code_bank_switch(note.bank, note.pad)
-    encoding = next_note + ' ' + pad_code + ' 0' + bank_switch + ' 00 ' + velocity + ' 40 ' + \
-               get_hex_length(note.length) + '\n'
+    encoding = f'{next_note}{pad_code}0{bank_switch}00{velocity}40{get_hex_length(note.length)}\n'
     return encoding
 
 
@@ -48,25 +44,8 @@ def gen_pad_code_bank_switch(bank_letter, pad_number):
 
 def get_hex_length(length):
     length = str(hex(length))[2:]
-    length = zero_pad(length)
+    length = add_padding(length, 4)
     return length
-
-
-def zero_pad(paddee):
-    if len(paddee) == 1:
-        length = '00 0' + str(paddee)
-    elif len(paddee) == 2:
-        length = '00 ' + str(paddee)
-    elif len(paddee) == 3:
-        length = '0' + str(paddee)[:1] + ' ' + str(paddee)[1:]
-    elif len(paddee) == 4:
-        length = str(paddee)[:2] + ' ' + str(paddee)[2:]
-    return length
-
-def add_padding(padee, length):
-    while len(padee) < length:
-        padee = '0' + padee
-    return padee
 
 
 def get_bar_code(pattern):
@@ -91,9 +70,7 @@ def gen_pad_bank(pad_code, bank_switch):
     if bank_switch == 1:
         bank += 5
     ascii_bank = chr(bank + constants.ascii_character_offset)
-    pd = str(pad)
-    if len(pd) == 1:
-        pd = "0" + pd
+    pd = add_padding(str(pd), 2)
     return pd, ascii_bank.upper()
 
 

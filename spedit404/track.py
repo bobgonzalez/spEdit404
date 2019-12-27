@@ -1,31 +1,71 @@
+import constants
+
 import copy
-from spedit404 import constants
 
 class Pattern:
     def __init__(self, length):
         self.length = int(length)
-        self.notes = []
+        self.tracks = [Track(length) for i in range(12)]
 
     def __add__(self, other):
-        new_pattern = Pattern(len(self)+len(other))
+        new_pattern = Pattern(len(self) + len(other))
         notes_to_add = copy.deepcopy(other.notes)
         for note in notes_to_add:
             note.time_start = note.time_start + (self.length*constants.ticks_per_bar)
-        new_pattern.notes = sorted(self.notes+other.notes, key=lambda n: n.start_tick)
+        new_pattern.notes = sorted(self.notes + other.notes, key=lambda n: n.start_tick)
         return new_pattern
 
     def __len__(self):
         return self.length
 
-    def add_note(self, note):
-        if note.start_tick < self.length*constants.ticks_per_bar:
-            self.notes.append(note)
+    def add_note(self, new_note):
+        if new_note.start_tick < self.length*constants.ticks_per_bar:
+            for i, track in enumerate(self.tracks):
+                try:
+                    track.add_note(new_note)
+                    return
+                except ValueError:
+                    pass
+            raise ValueError('note can not be added to pattern because it overlaps on all tracks')
+        else:
+            raise ValueError('note must start before the pattern ends')
+
+    def delete_note(self, track_index, note_index):
+        self.tracks[track_index].delete_note(note_index)
+
+
+class Track:
+    def __init__(self, length):
+        self.length = int(length)
+        self.notes = []
+
+    def __add__(self, other):
+        new_track = Track(len(self)+len(other))
+        notes_to_add = copy.deepcopy(other.notes)
+        for note in notes_to_add:
+            note.time_start = note.time_start + (self.length*constants.ticks_per_bar)
+            new_track.add_note(note)
+        return new_track
+
+    def __len__(self):
+        return self.length
+
+    def add_note(self, new_note):
+        if new_note.start_tick < self.length*constants.ticks_per_bar:
+            for note in self.notes:
+                if self.notes_collide(new_note, note):
+                    raise ValueError('notes must not overlap with any notes on track')
+            self.notes.append(new_note)
             self.notes = sorted(self.notes, key=lambda note: note.start_tick)
         else:
             raise ValueError('note must start before the pattern ends')
 
     def delete_note(self, note_index):
         self.notes.pop(note_index)
+
+    def notes_collide(self, new_note, note):
+        return ((new_note.start_tick >= note.start_tick and new_note.start_tick <= note.end_tick)
+            or(new_note.end_tick >= note.start_tick and new_note.end_tick <= note.end_tick))
 
 
 class Note:
@@ -46,6 +86,7 @@ class Note:
             self.length = length
         else:
             raise ValueError('length must be a positive integer')
+        self.end_tick = self.start_tick + self.length
         if 0 < velocity <= constants.max_velocity and type(start_tick) == int:
             self.velocity = velocity
         else:

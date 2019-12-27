@@ -1,25 +1,11 @@
-from bin_interpreter.pattern import *
-from wave_test import *
-from bin_interpreter.note import *
+from track import Pattern, Note
+from wave import *
+from utils import create_folder
+
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
 from os import *
 import subprocess
-
-'''
-TODO: use redis or shelve to let user save patterns
-TODO: e - edit hex values
-TODO: V - change all velocities
-TODO: D* - delete all occurrences of one pad, V* - change all velocities of one pad
-TODO: add swing function
-TODO: add triplet function
-TODO: move note by ticks
-TODO: copy subsection of pattern
-TODO: merge two patterns
-TODO: REFACTOR
-TODO: add more try, except blocks to prevent crash on wrong input
-TODO 404 to midi
-'''
 
 
 def menu():
@@ -27,32 +13,10 @@ def menu():
     return ret
 
 
-def preview_pat(pat):
-    """"-------------------------------------------------------------------------------------------"""
-    ret = AudioSegment.silent(duration=pat.MpT*384*pat.length*4)
-    for i, bar in enumerate(pat.score):
-        silence = AudioSegment.silent(duration=pat.MpT * 384 * i * 4)
-        #s1 = silence[:pat.MpT]
-        #s = s1 * self.time_start
-        for note in bar.notes:
-            #print("here")
-            #print(note.path)
-            #s = s1 * note.time_start
-            #a = AudioSegment.from_file(note.path)
-            ret = ret.overlay(silence + note.audio)
-            #print("here")
-    ret.export("/home/robert/PycharmProjects/spEdit404/mixed.wav", format='wav')
-    subprocess.call(["ffplay", "-nodisp", "-autoexit", "/home/robert/PycharmProjects/spEdit404/mixed.wav"])
-   # ret.play()
-
-
 def setup_folders():
-    if not os.path.exists("./export"):
-        os.makedirs("./export")
-    if not os.path.exists("./import"):
-        os.makedirs("./import")
-    if not os.path.exists("./tmp"):
-        os.makedirs("./tmp")
+    create_folder("./export")
+    create_folder("./import")
+    create_folder("./tmp")
 
 
 setup_folders()
