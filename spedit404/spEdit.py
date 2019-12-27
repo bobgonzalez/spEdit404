@@ -32,7 +32,7 @@ else:
         p = read_pattern(bank, pad)
     except:
         print("error reading binary : error 202")
-    print(p.print_pattern())
+    print(p)
 while True:
     print(menu())
     usr_in = input('> ')
@@ -54,7 +54,7 @@ while True:
                 print("error adding note : error 301")
                 e.printStackTrace()
         elif usr_in == 'pr':
-            print(p.print_pattern())
+            print(p)
         elif usr_in == "p":
             print("0 : 1-2-3-4 \n1 : 4 on the floor \n")
             selection = input('enter bank > ')
@@ -72,7 +72,7 @@ while True:
                 for i in range(p.length * 4):
                     n1 = Note('D', 12, 127, 60, 96, 0+(i*96))
                     p.add_note(n1, 0, 0+i)
-            print(p.print_pattern())
+            print(p)
         elif usr_in == 'e':
             break
         elif usr_in == 'w':
@@ -89,11 +89,11 @@ while True:
                 p.read_pattern(bank, pad)
             except:
                 print("error reading binary : error 202")
-            print(p.print_pattern())
+            print(p)
         elif usr_in == 'l':
             p.length = int(input('enter number of bars > '))
             p.ticks = p.length * 384
-            print(p.print_pattern())
+            print(p)
         elif usr_in == 'd':
             bank = input('enter bank > ')
             pad = input('enter pad > ')
@@ -103,10 +103,10 @@ while True:
                 p.delete_note(bank, pad, bn, n)
             except:
                 print("error deleting note : error 305")
-            print(p.print_pattern())
+            print(p)
         elif usr_in == 'D':
             p.clear_notes()
-            print(p.print_pattern())
+            print(p)
         elif usr_in == 'v':
             bank = input('enter bank > ')
             pad = input('enter pad > ')
@@ -117,7 +117,7 @@ while True:
                 p.change_note_velocity(bank, pad, bn, n, v)
             except:
                 print("error changing note velocity : error 306")
-            print(p.print_pattern())
+            print(p)
         elif usr_in == 'i':
             b = input('enter bank > ')
             pad = int(input('enter pad # > '))
@@ -133,10 +133,10 @@ while True:
                 p.add_note_at(n4, bn - 1, n)
             except:
                 print("error adding note : error 302")
-            print(p.print_pattern())
+            print(p)
         elif usr_in == 'm':
             p.double()
-            print(p.print_pattern())
+            print(p)
         elif usr_in == 'h':
             bank = input('enter bank > ')
             pad = input('enter pad > ')
@@ -147,7 +147,7 @@ while True:
                 p.change_note_length(bank, pad, bn, n, v)
             except:
                 print("error changing note length : error 307")
-            print(p.print_pattern())
+            print(p)
         elif usr_in == 'wt':
             b = input("g : generate wave\n" + "d : calculate duration\n" + "s : split on silence\n" + ' > ')
             if b == 'g':
