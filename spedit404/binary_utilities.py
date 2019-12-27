@@ -99,7 +99,6 @@ def read_pattern(bank_letter, pad_number):
             velocity = int(str(note[8] + note[9]), 16)
             length_ticks = int(str(note[12] + note[13] + note[14] + note[15]), 16)
             pad, bank = gen_pad_bank(pad_code=str(note[2] + note[3]), bank_switch=note[5])
-            print(pad,bank)
             pattern.add_note(Note(bank=bank, pad=pad, velocity=velocity, length=length_ticks, start_tick=current_time))
             current_time += ticks_till_next_note
     return pattern
