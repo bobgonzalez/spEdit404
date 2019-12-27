@@ -1,5 +1,5 @@
 from track import Pattern, Note
-from binary_utilities import read_pattern
+from binary_utilities import read_pattern, write_binary
 from wave import *
 from utils import create_folder
 
@@ -74,7 +74,7 @@ while True:
             bank = input('enter bank > ')
             pad = input('enter pad > ')
             try:
-                p.write_binary(bank, pad)
+                write_binary(p, bank, pad)
             except Exception as e:
                 e.printStackTrace()
                 print("error writing binary : error 203")

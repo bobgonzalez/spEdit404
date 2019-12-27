@@ -10,9 +10,14 @@ def write_binary(pattern, bank_letter, pad_number):
     outputBIN = f'./export/PTN00{get_pad_code(bank_letter, pad_number)}.BIN'
     pattern_length_encoding = f'00 8C 00 00 00 00 00 00 \n00 {get_bar_code(pattern)} 00 00 00 00 00 00'
     remove_file('./test.txt')
-    with open('./test.txt', 'rw+') as buffer_file, open(outputBIN, 'wb') as output_binary:
-        for i, note in enumerate(pattern.notes):
-            write_hex(output_binary, write_note(note, pattern.notes[i+1].start_tick))
+    with open(outputBIN, 'wb') as output_binary:
+        notes = []
+        for track in pattern.tracks:
+            notes += track.notes
+        notes = sorted(notes, key=lambda note: note.start_tick)
+        for i, note in enumerate(notes):
+            next_note_start = 0 if i+1 == len(notes) else notes[i+1].start_tick
+            write_hex(output_binary, write_note(note, next_note_start))
         write_hex(output_binary, pattern_length_encoding)
 
 
