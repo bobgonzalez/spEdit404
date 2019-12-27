@@ -5,7 +5,8 @@ from utils import create_folder
 
 
 def menu():
-    ret = "r : read pattern from binary\n" + "i : insert note\n" + "d : delete note\nD : clear all notes\n" + "v : change note velocities\n" + "h : change note length\n" + "l : set pattern length\n" + "m : double pattern\n" + "w : write pattern to binary\n" + "x : exit\n"
+    ret = ("r : read pattern from binary\n" + "a : add note\n" + "d : delete note\n"
+           + "l : set pattern length\n" + "w : write pattern to binary\n" + "x : exit\n")
     return ret
 
 
@@ -25,7 +26,8 @@ else:
     pad = input('enter pad > ')
     try:
         p = read_pattern(bank, pad)
-    except:
+    except Exception as e:
+        e.printStackTrace()
         print("error reading binary : error 202")
     print(p)
 while True:
@@ -48,28 +50,9 @@ while True:
             except Exception as e:
                 e.printStackTrace()
                 print("error adding note : error 301")
+            print(p)
         elif usr_in == 'pr':
             print(p)
-        elif usr_in == "p":
-            print("0 : 1-2-3-4 \n1 : 4 on the floor \n")
-            selection = input('enter bank > ')
-            if selection == '0':
-                for i in range(p.length):
-                    n1 = Note('D', 12, 127, 60, 96, 0+(384*i))
-                    p.add_note(n1, 0, (4*i)+0)
-                    n3 = Note('D', 11, 127, 60, 96, 96+(384*i))
-                    p.add_note(n3, 0, (4*i)+1)
-                    n2 = Note('D', 9, 127, 60, 96, 192+(384*i))
-                    p.add_note(n2, 0, (4*i)+2)
-                    n4 = Note('D', 10, 127, 60, 96, 288+(384*i))
-                    p.add_note(n4, 0, (4*i)+3)
-            elif selection == '1':
-                for i in range(p.length * 4):
-                    n1 = Note('D', 12, 127, 60, 96, 0+(i*96))
-                    p.add_note(n1, 0, 0+i)
-            print(p)
-        elif usr_in == 'e':
-            break
         elif usr_in == 'w':
             bank = input('enter bank > ')
             pad = input('enter pad > ')
@@ -82,11 +65,11 @@ while True:
             bank = input('enter bank > ')
             pad = input('enter pad > ')
             try:
-                p.read_pattern(bank, pad)
+                p = read_pattern(bank, pad)
+                print(p)
             except Exception as e:
                 e.printStackTrace()
                 print("error reading binary : error 202")
-            print(p)
         elif usr_in == 'l':
             p.change_length = int(input('enter number of bars > '))
             print(p)
@@ -98,9 +81,6 @@ while True:
             except Exception as e:
                 e.printStackTrace()
                 print("error deleting note : error 305")
-            print(p)
-        elif usr_in == 'D':
-            p.clear_notes()
             print(p)
         elif usr_in == 'x':
             break

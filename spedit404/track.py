@@ -65,9 +65,9 @@ class Track:
         return self.length
 
     def __str__(self):
-        ret = '.' * int((constants.ticks_per_bar*len(self))/constants.resolution)
+        ret = '..' * int((constants.ticks_per_bar*len(self))/constants.resolution)
         for note in self.notes:
-            ret = ret[:int(note.start_tick/constants.resolution)] + str(note) + ret[int(note.end_tick/constants.resolution):]
+            ret = ret[:int(note.start_tick/constants.resolution)*2] + str(note) + ret[(int(note.end_tick/constants.resolution)+1)*2:]
         return ret
 
     def add_note(self, new_note):
@@ -122,4 +122,4 @@ class Note:
                 and self.velocity == other.velocity)
 
     def __str__(self):
-        return f"{self.bank}{self.pad}{'-' * int(self.length/constants.resolution)}"
+        return f"{self.bank}{self.pad}{'--' * int(self.length/constants.resolution)}"
