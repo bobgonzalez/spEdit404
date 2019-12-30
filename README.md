@@ -1,8 +1,8 @@
 # spEdit404
-*This tool has gone from mostly working back to POC*
+*This tool is back to mostly working! please check it out and let me know if any issues arise*
 
 
-*Update: note, patterns and audio rendering of current pattern are up and running using track.py and wave.py. Next step is to test binary read / write, and create a better GIU/TUI*
+*to use the preview pattern method which will render patterns as mp3's you must pip install simpleaudio. will add this to requirements.txt soon.*
 
 
 spEdit is a tool for modifying and creating binary pattern files for the Roland SP-404SX. For more information check out my series of blog posts about the sp404SX pattern format and the spEdit tool : [spEdit blog posts!](http://byteflip.club/categories/sp-edit)
