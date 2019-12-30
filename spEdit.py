@@ -10,15 +10,13 @@ def menu():
 
 
 def setup_folders():
-    create_folder("./export")
-    create_folder("./import")
-    create_folder("./tmp")
+    folders = ["./export", "./import", "./tmp"]
+    [create_folder(folder) for folder in folders]
 
 
 def get_user_input(fields):
     values = []
-    for field in fields:
-        values.append(input(f'enter {field} > '))
+    [values.append(input(f'enter {field} > ')) for field in fields]
     return values
 
 
