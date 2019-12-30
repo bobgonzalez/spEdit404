@@ -25,12 +25,12 @@ def get_user_input(fields):
 if __name__ == "__main__":
     setup_folders()
     length = input('enter length of pattern in bars or enter \'r\' to load pattern >')
-    if length != 'r':
-        pattern = Pattern(int(length))
-    else:
+    if length == 'r':
         bank, pad = get_user_input(['bank', 'pad'])
         pattern = read_pattern(bank, pad)
-        print(pattern)
+    else:
+        pattern = Pattern(int(length))
+    print(pattern)
     while True:
         menu_choice = menu()
         if menu_choice == 'a':
