@@ -27,8 +27,7 @@ if __name__ == "__main__":
     setup_folders()
     length = input('enter length of pattern in bars or enter \'r\' to load pattern >')
     if length != 'r':
-        length = int(length)
-        pattern = Pattern(length)
+        pattern = Pattern(int(length))
     else:
         bank, pad = get_user_input(['bank', 'pad'])
         pattern = read_pattern(bank, pad)
@@ -41,23 +40,17 @@ if __name__ == "__main__":
                                                                       'length', f'note start 0-{384 * len(pattern)}> '])
             new_note = Note(pad, bank, start_tick, length, velocity)
             pattern.add_note(new_note)
-            print(pattern)
-        elif usr_in == 'pr':
-            print(pattern)
         elif usr_in == 'w':
             bank, pad = get_user_input(['bank', 'pad'])
             write_binary(pattern, bank, pad)
         elif usr_in == 'r':
             bank, pad = get_user_input(['bank', 'pad'])
             pattern = read_pattern(bank, pad)
-            print(pattern)
         elif usr_in == 'l':
             pattern.change_length = int(input('enter number of bars > '))
-            print(pattern)
         elif usr_in == 'd':
-            track = input('enter track # 0-11 > ')
-            note = input('enter note # 0-n > ')
+            track, note = get_user_input(['track', 'note'])
             pattern.delete_note(track, note)
-            print(pattern)
         elif usr_in == 'x':
             break
+        print(pattern)
