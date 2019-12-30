@@ -1,11 +1,12 @@
-import unittest
 from track import Note, Pattern
 
+import unittest
 
-class TestTrack(unittest.TestCase):
+
+class TestNote(unittest.TestCase):
 
     def set_up(self):
-        self.pattern = Pattern(1)
+        pass
 
     def test_create_dumb_note(self):
         self.create_dumb_note()
@@ -26,6 +27,18 @@ class TestTrack(unittest.TestCase):
 
     def test_cant_create_note_negative_length(self):
         self.assertRaises(ValueError, self.create_dumb_note, length=-1)
+
+    def create_dumb_note(self, **kwargs):
+        return Note(pad=kwargs.get('pad', 1), bank=kwargs.get('bank', 'a'),
+                          start_tick=kwargs.get('start_tick', 0), length=kwargs.get('length', 60),
+                          velocity=kwargs.get('velocity', 127))
+
+
+class TestPattern(unittest.TestCase):
+# TODO test setting and changing pattern length out of bounds 0<x<99
+
+    def set_up(self):
+        self.pattern = Pattern(1)
 
     def test_pattern_add_note(self):
         self.set_up()
@@ -53,9 +66,6 @@ class TestTrack(unittest.TestCase):
         return Note(pad=kwargs.get('pad', 1), bank=kwargs.get('bank', 'a'),
                           start_tick=kwargs.get('start_tick', 0), length=kwargs.get('length', 60),
                           velocity=kwargs.get('velocity', 127))
-
-# TODO test setting and changing pattern length out of bounds 0<x<99
-# TODO seperate these tests into note, track, and pattern test classes
 
 if __name__ == '__main__':
     unittest.main()
