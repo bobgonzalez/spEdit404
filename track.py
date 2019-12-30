@@ -41,6 +41,8 @@ class Pattern:
             raise ValueError('note must start before the pattern ends')
 
     def delete_note(self, track_index, note_index):
+        track_index = int(track_index)
+        note_index = int(note_index)
         self.tracks[track_index].delete_note(note_index)
 
     def change_length(self, new_length):
