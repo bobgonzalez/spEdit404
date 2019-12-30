@@ -4,17 +4,19 @@ from utils import add_padding
 import copy
 import os
 
+
 class Pattern:
     def __init__(self, length):
         self.length = int(length)
         self.tracks = [Track(length) for i in range(12)]
 
     def __add__(self, other):
-        new_pattern = Pattern(len(self) + len(other))
+        new_pattern = copy.deepcopy(self)
+        new_pattern.change_length(len(self) + len(other))
         notes_to_add = copy.deepcopy(other.notes)
         for note in notes_to_add:
             note.time_start = note.time_start + (self.length*constants.ticks_per_bar)
-        new_pattern.notes = sorted(self.notes + other.notes, key=lambda n: n.start_tick)
+            new_pattern.add_note(note)
         return new_pattern
 
     def __len__(self):
