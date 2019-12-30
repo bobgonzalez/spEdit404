@@ -24,14 +24,14 @@ def get_user_input(fields):
 
 if __name__ == "__main__":
     setup_folders()
-    length = input('enter length of pattern in bars or enter \'r\' to load pattern >')
+    length = input('enter length of pattern or enter \'r\' to load pattern >')
     if length == 'r':
         bank, pad = get_user_input(['bank', 'pad'])
         pattern = read_pattern(bank, pad)
     else:
         pattern = Pattern(int(length))
-    print(pattern)
     while True:
+        print(pattern)
         menu_choice = menu()
         if menu_choice == 'a':
             bank, pad, velocity, length, start_tick = get_user_input(['bank', 'pad', 'velocity 0-127',
@@ -54,4 +54,3 @@ if __name__ == "__main__":
             preview_pattern(pattern, bpm)
         elif menu_choice == 'x':
             break
-        print(pattern)
