@@ -84,12 +84,17 @@ class Track:
         self.notes.pop(note_index)
 
     def notes_collide(self, new_note, note):
-        return ((new_note.start_tick >= note.start_tick and new_note.start_tick <= note.end_tick)
-            or(new_note.end_tick >= note.start_tick and new_note.end_tick <= note.end_tick))
+        return ((note.start_tick <= new_note.start_tick <= note.end_tick)
+                or (note.start_tick <= new_note.end_tick <= note.end_tick))
 
 
 class Note:
     def __init__(self, pad, bank, start_tick, length, velocity):
+        pad = int(pad)
+        start_tick = int(start_tick)
+        length = int(length)
+        velocity = int(velocity)
+
         if 0 < pad <= constants.pads_per_bank and type(start_tick) == int:
             self.pad = pad
         else:
