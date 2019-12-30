@@ -35,7 +35,9 @@ class TestNote(unittest.TestCase):
 
 
 class TestPattern(unittest.TestCase):
-# TODO test setting and changing pattern length out of bounds 0<x<99
+    # TODO test setting and changing pattern length out of bounds 0<x<99
+    # TODO test note collision when new note starts or ends in existing note
+    # TODO test note collision when existing note starts or ends in new note
 
     def set_up(self):
         self.pattern = Pattern(1)

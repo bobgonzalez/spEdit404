@@ -54,6 +54,7 @@ class Pattern:
 
 
 class Track:
+    # TODO long notes clearly extend track str() length when the should not
     def __init__(self, length):
         self.length = int(length)
         self.notes = []
@@ -90,7 +91,9 @@ class Track:
 
     def notes_collide(self, new_note, note):
         return ((note.start_tick <= new_note.start_tick <= note.end_tick)
-                or (note.start_tick <= new_note.end_tick <= note.end_tick))
+                or (note.start_tick <= new_note.end_tick <= note.end_tick)
+                or (new_note.start_tick <= note.end_tick <= new_note.end_tick)
+                or (new_note.start_tick <= note.end_tick <= new_note.end_tick))
 
 
 class Note:
