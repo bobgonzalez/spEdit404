@@ -1,4 +1,5 @@
 import constants
+from utils import add_padding
 
 import copy
 import os
@@ -21,8 +22,8 @@ class Pattern:
 
     def __str__(self):
         ret = ''
-        for track in self.tracks:
-            ret += f'{track}{os.linesep}'
+        for i, track in enumerate(self.tracks):
+            ret += f'{add_padding(i, 2)}:\t{track}{os.linesep}'
         return ret
 
     def add_note(self, new_note):
