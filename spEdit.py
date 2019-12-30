@@ -38,7 +38,7 @@ def action_loop(pattern, menu_choice):
         track, note = get_user_input(['track', 'note'])
         pattern.delete_note(track, note)
     elif menu_choice == 'p':
-        bpm = get_user_input(['bpm'])
+        bpm = input(f'enter bpm > ')
         preview_pattern(pattern, bpm)
     return pattern
 

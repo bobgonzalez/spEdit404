@@ -6,6 +6,7 @@ from pydub.playback import play
 
 
 def preview_pattern(pattern, bpm):
+    bpm = int(bpm)
     MpT = milliseconds_per_tick(bpm)
     pattern_audio = AudioSegment.silent(duration=constants.ticks_per_bar * pattern.length * MpT)
     for track in pattern.tracks:
