@@ -7,8 +7,8 @@ import sys
 
 
 def menu():
-    return input("r : read pattern from binary\n" + "a : add note\n" + "d : delete note\n" + "l : set pattern length\n"
-                 + "w : write pattern to binary\n" + "p : preview pattern\n" + "x : exit\n>")
+    print(*[f'{k}: {v.__name__}' for k, v in action_map.items()], sep='\n')
+    return input('>')
 
 
 def setup_folders():
