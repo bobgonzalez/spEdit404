@@ -16,38 +16,39 @@ def setup_folders():
     create_folder("./tmp")
 
 
-if __name__ == "__main__": 
+def get_user_input(fields):
+    values = []
+    for field in fields:
+        values.append(input(f'enter {field} > '))
+    return values
+
+
+if __name__ == "__main__":
     setup_folders()
     length = input('enter length of pattern in bars or enter \'r\' to load pattern >')
     if length != 'r':
         length = int(length)
         pattern = Pattern(length)
     else:
-        bank = input('enter bank > ')
-        pad = input('enter pad > ')
+        bank, pad = get_user_input(['bank', 'pad'])
         pattern = read_pattern(bank, pad)
         print(pattern)
     while True:
         print(menu())
         usr_in = input('> ')
         if usr_in == 'a':
-            bank = input('enter bank > ')
-            pad = int(input('enter pad # > '))
-            velocity = int(input('enter velocity 0-127 > '))
-            length = int(input('enter length > '))
-            start_tick = int(input(f'enter note start 0-{384 * len(pattern)}> '))
+            bank, pad, velocity, length, start_tick = get_user_input(['bank', 'pad', 'velocity 0-127',
+                                                                      'length', f'note start 0-{384 * len(pattern)}> '])
             new_note = Note(pad, bank, start_tick, length, velocity)
             pattern.add_note(new_note)
             print(pattern)
         elif usr_in == 'pr':
             print(pattern)
         elif usr_in == 'w':
-            bank = input('enter bank > ')
-            pad = input('enter pad > ')
+            bank, pad = get_user_input(['bank', 'pad'])
             write_binary(pattern, bank, pad)
         elif usr_in == 'r':
-            bank = input('enter bank > ')
-            pad = input('enter pad > ')
+            bank, pad = get_user_input(['bank', 'pad'])
             pattern = read_pattern(bank, pad)
             print(pattern)
         elif usr_in == 'l':
