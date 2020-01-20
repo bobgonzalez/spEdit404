@@ -79,7 +79,7 @@ def gen_pad_bank(pad_code, bank_switch):
 
 
 def read_pattern(bank_letter, pad_number):
-    # TODO this read needs to be updated for the track pattern
+    # TODO this read to be refactored and made readable
     inputBIN = f'./import/PTN00{get_pad_code(bank_letter, pad_number)}.BIN'
     with open(inputBIN, 'rb') as f:
         hexdata = binascii.hexlify(f.read())
@@ -94,7 +94,8 @@ def read_pattern(bank_letter, pad_number):
 
     current_time = 0
     for i, note in enumerate(note_list):
-        if str(note[2] + note[3]) != '80' or len(pattern.notes) == 0:
+        #if str(note[2] + note[3]) != '80' or len(pattern.notes) == 0:
+        if str(note[2] + note[3]) != '80':
             ticks_till_next_note = int(str(note[0] + note[1]), 16)
             velocity = int(str(note[8] + note[9]), 16)
             length_ticks = int(str(note[12] + note[13] + note[14] + note[15]), 16)
