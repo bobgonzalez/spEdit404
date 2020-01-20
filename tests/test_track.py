@@ -30,8 +30,8 @@ class TestNote(unittest.TestCase):
 
     def create_dumb_note(self, **kwargs):
         return Note(pad=kwargs.get('pad', 1), bank=kwargs.get('bank', 'a'),
-                          start_tick=kwargs.get('start_tick', 0), length=kwargs.get('length', 60),
-                          velocity=kwargs.get('velocity', 127))
+                    start_tick=kwargs.get('start_tick', 0), length=kwargs.get('length', 60),
+                    velocity=kwargs.get('velocity', 127))
 
 
 class TestPattern(unittest.TestCase):
@@ -66,8 +66,9 @@ class TestPattern(unittest.TestCase):
 
     def create_dumb_note(self, **kwargs):
         return Note(pad=kwargs.get('pad', 1), bank=kwargs.get('bank', 'a'),
-                          start_tick=kwargs.get('start_tick', 0), length=kwargs.get('length', 60),
-                          velocity=kwargs.get('velocity', 127))
+                    start_tick=kwargs.get('start_tick', 0), length=kwargs.get('length', 60),
+                    velocity=kwargs.get('velocity', 127))
+
 
 if __name__ == '__main__':
     unittest.main()
