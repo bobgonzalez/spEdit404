@@ -1,28 +1,28 @@
 import constants
 from track import Pattern, Note
-from utils import remove_file, add_padding
+from utils import add_padding
 
 import binascii
 from itertools import islice
 
 
 def write_binary(pattern, bank_letter, pad_number):
-    outputBIN = f'./export/PTN00{get_pad_code(bank_letter, pad_number)}.BIN'
-    pattern_length_encoding = f'008C000000000000\n00{get_bar_code(pattern)}000000000000'
-    remove_file('./test.txt')
-    with open(outputBIN, 'wb') as output_binary:
+    output_binary_path = f'./export/PTN00{get_pad_code(bank_letter, pad_number)}.BIN'
+    pattern_length_encoding = constants.length_encoding.format(get_bar_code(pattern))
+    with open(output_binary_path, 'wb') as output_binary:
         notes = []
         for track in pattern.tracks:
             notes += track.notes
         notes = sorted(notes, key=lambda n: n.start_tick)
         for i, note in enumerate(notes):
-            next_note_start = note.start_tick if i+1 == len(notes) else notes[i+1].start_tick
-            write_hex(output_binary, write_note(note, next_note_start).strip())
-        write_hex(output_binary, pattern_length_encoding.strip())
+            is_last_note = i+1 == len(notes)
+            next_note_start = note.start_tick if is_last_note else notes[i+1].start_tick
+            write_hex(output_binary, write_note(note, next_note_start))
+        write_hex(output_binary, pattern_length_encoding)
 
 
-def write_hex(out_file, hex):
-    out_file.write(binascii.unhexlify(''.join(hex.split())))
+def write_hex(out_file, hex_string):
+    out_file.write(binascii.unhexlify(''.join(hex_string.split()).strip()))
 
 
 def write_note(note, next_note_start_tick):
@@ -75,11 +75,11 @@ def gen_pad_bank(pad_code, bank_switch):
     if bank_switch == 1:
         bank += 5
     ascii_bank = chr(bank + constants.ascii_character_offset)
-    pd = add_padding(str(pad), 2)
     return pad, ascii_bank.upper()
 
 
 def read_pattern(bank_letter, pad_number):
+    # TODO this read needs to be updated for the track pattern
     inputBIN = f'./import/PTN00{get_pad_code(bank_letter, pad_number)}.BIN'
     with open(inputBIN, 'rb') as f:
         hexdata = binascii.hexlify(f.read())

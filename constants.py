@@ -9,3 +9,4 @@ pad_offset_magic_number = 46
 max_velocity = 127
 resolution = 10
 path_to_samples = "./SP-404SX/SMPL/"
+length_encoding = "008C000000000000\n00{}000000000000"
