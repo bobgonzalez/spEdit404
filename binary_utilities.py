@@ -8,17 +8,17 @@ from itertools import islice
 
 def write_binary(pattern, bank_letter, pad_number):
     outputBIN = f'./export/PTN00{get_pad_code(bank_letter, pad_number)}.BIN'
-    pattern_length_encoding = f'00 8C 00 00 00 00 00 00 \n00 {get_bar_code(pattern)} 00 00 00 00 00 00'
+    pattern_length_encoding = f'008C000000000000\n00{get_bar_code(pattern)}000000000000'
     remove_file('./test.txt')
     with open(outputBIN, 'wb') as output_binary:
         notes = []
         for track in pattern.tracks:
             notes += track.notes
-        notes = sorted(notes, key=lambda note: note.start_tick)
+        notes = sorted(notes, key=lambda n: n.start_tick)
         for i, note in enumerate(notes):
-            next_note_start = 0 if i+1 == len(notes) else notes[i+1].start_tick
-            write_hex(output_binary, write_note(note, next_note_start))
-        write_hex(output_binary, pattern_length_encoding)
+            next_note_start = note.start_tick if i+1 == len(notes) else notes[i+1].start_tick
+            write_hex(output_binary, write_note(note, next_note_start).strip())
+        write_hex(output_binary, pattern_length_encoding.strip())
 
 
 def write_hex(out_file, hex):
@@ -28,7 +28,7 @@ def write_hex(out_file, hex):
 def write_note(note, next_note_start_tick):
     #  TODO FIX EROR WHEN WRITING NOTE WHOSE HEX NEXT NOTE VALUE IS 3 DIGIT, NEEDS POST NOTE PADDING
     velocity = add_padding(str(hex(note.velocity))[2:], 2)
-    next_note = note.start_tick - next_note_start_tick
+    next_note = next_note_start_tick - note.start_tick
     if len(str(hex(next_note))[2:]) == 1:
         next_note = '0' + str(next_note)
     else:
