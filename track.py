@@ -8,7 +8,7 @@ import os
 class Pattern:
     def __init__(self, length):
         self.length = int(length)
-        self.tracks = [Track(length) for i in range(12)]
+        self.tracks = [Track(length) for i in range(constants.number_of_tracks)]
 
     def __add__(self, other):
         new_pattern = copy.deepcopy(self)

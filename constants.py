@@ -5,6 +5,7 @@ number_of_bank_pads = 4
 number_of_banks = 8
 secondary_bank_offset = 5
 pads_per_bank = 12
+number_of_tracks = 12
 pad_offset_magic_number = 46
 max_velocity = 127
 resolution = 10
