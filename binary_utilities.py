@@ -8,17 +8,30 @@ from itertools import islice
 
 def write_binary(pattern, bank_letter, pad_number):
     output_binary_path = f'./export/PTN00{get_pad_code(bank_letter, pad_number)}.BIN'
-    pattern_length_encoding = constants.length_encoding.format(get_bar_code(pattern))
     with open(output_binary_path, 'wb') as output_binary:
-        notes = []
-        for track in pattern.tracks:
-            notes += track.notes
-        notes = sorted(notes, key=lambda n: n.start_tick)
+        notes = get_sorted_notes(pattern)
         for i, note in enumerate(notes):
-            is_last_note = i+1 == len(notes)
-            next_note_start = note.start_tick if is_last_note else notes[i+1].start_tick
-            write_hex(output_binary, write_note(note, next_note_start))
-        write_hex(output_binary, pattern_length_encoding)
+            write_note_hex_data(i, note, notes, output_binary)
+        write_pattern_length_hex_data(output_binary, pattern)
+
+
+def get_sorted_notes(pattern):
+    notes = []
+    for track in pattern.tracks:
+        notes += track.notes
+    notes = sorted(notes, key=lambda n: n.start_tick)
+    return notes
+
+
+def write_note_hex_data(i, note, notes, output_binary):
+    is_last_note = i + 1 == len(notes)
+    next_note_start = note.start_tick if is_last_note else notes[i + 1].start_tick
+    write_hex(output_binary, write_note(note, next_note_start))
+
+
+def write_pattern_length_hex_data(output_binary, pattern):
+    pattern_length_encoding = constants.length_encoding.format(get_bar_code(pattern))
+    write_hex(output_binary, pattern_length_encoding)
 
 
 def write_hex(out_file, hex_string):
@@ -60,15 +73,15 @@ def get_bar_code(pattern):
 
 
 def get_pad_code(bank_letter, pad_number):
-    bank = ord(bank_letter.lower()) - 97
-    code = str(hex((bank * 12) + int(pad_number)))[2:]
+    bank = ord(bank_letter.lower()) - constants.ascii_character_offset
+    code = str(hex((bank * constants.pads_per_bank) + int(pad_number)))[2:]
     return add_padding(code, 3)
 
 
 def gen_pad_bank(pad_code, bank_switch):
     real_code = int(pad_code, 16) - constants.pad_offset_magic_number
-    bank = int(real_code / 12)
-    pad = real_code % 12
+    bank = int(real_code / constants.pads_per_bank)
+    pad = real_code % constants.pads_per_bank
     if pad == 0:
         pad = 12
         bank -= 1
@@ -80,17 +93,16 @@ def gen_pad_bank(pad_code, bank_switch):
 
 def read_pattern(bank_letter, pad_number):
     # TODO this read to be refactored and made readable
-    inputBIN = f'./import/PTN00{get_pad_code(bank_letter, pad_number)}.BIN'
-    with open(inputBIN, 'rb') as f:
-        hexdata = binascii.hexlify(f.read())
-    split_list = list(chunk(hexdata, 16))
+    hex_data = get_pattern_hex_data(bank_letter, pad_number)
+    split_list = list(chunk(hex_data, 16))
     sl = []
     for i, l in enumerate(split_list):
         sl.append(list(chr(i) for i in l))
     #    for j, asci in enumerate(l):
     #        split_list[i][j] == chr(asci)
     note_list = sl[:-2]
-    pattern = Pattern(int(str(sl[-1][2] + sl[-1][3]), base=16))
+    pattern_length = int(str(sl[-1][2] + sl[-1][3]), base=16)
+    pattern = Pattern(pattern_length)
 
     current_time = 0
     for i, note in enumerate(note_list):
@@ -103,6 +115,13 @@ def read_pattern(bank_letter, pad_number):
             pattern.add_note(Note(bank=bank, pad=pad, velocity=velocity, length=length_ticks, start_tick=current_time))
             current_time += ticks_till_next_note
     return pattern
+
+
+def get_pattern_hex_data(bank_letter, pad_number):
+    input_binary_path = f'./import/PTN00{get_pad_code(bank_letter, pad_number)}.BIN'
+    with open(input_binary_path, 'rb') as input_binary:
+        hex_data = binascii.hexlify(input_binary.read())
+    return hex_data
 
 
 def chunk(data, size):
