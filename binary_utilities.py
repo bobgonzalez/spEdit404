@@ -92,20 +92,13 @@ def gen_pad_bank(pad_code, bank_switch):
 
 
 def read_pattern(bank_letter, pad_number):
-    # TODO this read to be refactored and made readable
-    hex_data = get_pattern_hex_data(bank_letter, pad_number)
-    split_list = list(chunk(hex_data, 16))
-    sl = []
-    for i, l in enumerate(split_list):
-        sl.append(list(chr(i) for i in l))
-    #    for j, asci in enumerate(l):
-    #        split_list[i][j] == chr(asci)
-    note_list = sl[:-2]
-    pattern_length = int(str(sl[-1][2] + sl[-1][3]), base=16)
+    hex_data = get_hex_character_row_representation(bank_letter, pad_number)
+    note_list = hex_data[:-2]
+    pattern_length = int(str(hex_data[-1][2] + hex_data[-1][3]), base=16)
     pattern = Pattern(pattern_length)
 
     current_time = 0
-    for i, note in enumerate(note_list):
+    for chunk_index, note in enumerate(note_list):
         #if str(note[2] + note[3]) != '80' or len(pattern.notes) == 0:
         if str(note[2] + note[3]) != '80':
             ticks_till_next_note = int(str(note[0] + note[1]), 16)
@@ -115,6 +108,18 @@ def read_pattern(bank_letter, pad_number):
             pattern.add_note(Note(bank=bank, pad=pad, velocity=velocity, length=length_ticks, start_tick=current_time))
             current_time += ticks_till_next_note
     return pattern
+
+
+def get_hex_character_row_representation(bank_letter, pad_number):
+    # this reads in the binary data as one hex byte string
+    raw_hex_data = get_pattern_hex_data(bank_letter, pad_number)
+    # this breaks the hex into 16 byte chunks
+    # inadvertently casting the bytes as integer representations of ascii characters
+    integer_data_chunks = list(chunk(raw_hex_data, 16))
+    # this converts the integer representations to ascii characters
+    hex_data = [(list(chr(integer_byte) for integer_byte in integer_data_chunk))
+                for integer_data_chunk in integer_data_chunks]
+    return hex_data
 
 
 def get_pattern_hex_data(bank_letter, pad_number):
