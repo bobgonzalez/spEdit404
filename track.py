@@ -2,20 +2,26 @@ import constants
 from utils import add_padding
 
 import copy
+import math
 import os
+
+
+FRAMES_PER_BAR = 16
+RESOLUTION = int(constants.TICKS_PER_BAR / FRAMES_PER_BAR)
+NUMBER_OF_TRACKS = 12
 
 
 class Pattern:
     def __init__(self, length):
         self.length = int(length)
-        self.tracks = [Track(length) for i in range(constants.number_of_tracks)]
+        self.tracks = [Track(length) for i in range(NUMBER_OF_TRACKS)]
 
     def __add__(self, other):
         new_pattern = copy.deepcopy(self)
         new_pattern.change_length(len(self) + len(other))
         notes_to_add = copy.deepcopy(other.notes)
         for note in notes_to_add:
-            note.time_start = note.time_start + (self.length*constants.ticks_per_bar)
+            note.time_start = note.time_start + (self.length * constants.TICKS_PER_BAR)
             new_pattern.add_note(note)
         return new_pattern
 
@@ -24,12 +30,14 @@ class Pattern:
 
     def __str__(self):
         ret = ''
-        for i, track in enumerate(self.tracks):
-            ret += f'{add_padding(i, 2)}:\t{track}{os.linesep}'
+        for bar in range(len(self)):
+            ret += f'Bar#{bar}{os.linesep}'
+            for i, track in enumerate(self.tracks):
+                ret += f'{add_padding(i, 2)}:\t{track.print_bar(bar)}{os.linesep}'
         return ret
 
     def add_note(self, new_note):
-        if new_note.start_tick < self.length*constants.ticks_per_bar:
+        if new_note.start_tick < self.length*constants.TICKS_PER_BAR:
             for i, track in enumerate(self.tracks):
                 try:
                     track.add_note(new_note)
@@ -54,7 +62,6 @@ class Pattern:
 
 
 class Track:
-    # TODO long notes clearly extend track str() length when the should not
     def __init__(self, length):
         self.length = int(length)
         self.notes = []
@@ -63,21 +70,43 @@ class Track:
         new_track = Track(len(self)+len(other))
         notes_to_add = copy.deepcopy(other.notes)
         for note in notes_to_add:
-            note.time_start = note.time_start + (self.length*constants.ticks_per_bar)
+            note.time_start = note.time_start + (self.length * constants.TICKS_PER_BAR)
             new_track.add_note(note)
         return new_track
 
     def __len__(self):
         return self.length
 
-    def __str__(self):
-        ret = '..' * int((constants.ticks_per_bar*len(self))/constants.resolution)
+    def print_bar(self, bar_number):
+        #  The following var's assume that bar_number is 0 indexed
+        bar_start = 384*bar_number
+        bar_end = 384*(bar_number+1)
+
+        bar = ['..' for i in range(FRAMES_PER_BAR)]
         for note in self.notes:
-            ret = ret[:int(note.start_tick/constants.resolution)*2] + str(note) + ret[(int(note.end_tick/constants.resolution)+1)*2:]
-        return ret
+            if bar_start <= note.start_tick < bar_end:
+                #  print note in the earliest frame that it appears
+                start_frame = math.floor(note.start_tick / RESOLUTION) % 16
+                #  print note playing till the latest frame that it plays in
+                end_frame = math.ceil(note.end_tick / RESOLUTION)
+                if end_frame > FRAMES_PER_BAR:
+                    end_frame = FRAMES_PER_BAR
+                bar[start_frame] = str(note)
+                if end_frame != start_frame:
+                    bar[start_frame+1:end_frame] = ['--' for i in range(end_frame-(start_frame+1))]
+            elif bar_start <= note.end_tick <= bar_end:
+                end_frame = math.ceil(note.end_tick / RESOLUTION) % 16
+                if end_frame == 0:
+                    end_frame = 16
+                bar[:end_frame] = ['--' for i in range(end_frame)]
+            elif note.start_tick < bar_start and note.end_tick > bar_end:
+                bar = ['--' for i in range(FRAMES_PER_BAR)]
+        return bar
+
+
 
     def add_note(self, new_note):
-        if new_note.start_tick < self.length*constants.ticks_per_bar:
+        if new_note.start_tick < self.length*constants.TICKS_PER_BAR:
             for note in self.notes:
                 if self.notes_collide(new_note, note):
                     raise ValueError('notes must not overlap with any notes on track')
@@ -135,4 +164,4 @@ class Note:
                 and self.velocity == other.velocity)
 
     def __str__(self):
-        return f"{self.bank}{self.pad}{'--' * int(self.length/constants.resolution)}"
+        return f"{self.bank}{self.pad}"
