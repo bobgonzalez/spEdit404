@@ -1,4 +1,5 @@
-from track import Note, Pattern
+from pattern import Pattern
+from note import Note
 
 import unittest
 

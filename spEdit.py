@@ -1,4 +1,5 @@
-from track import Pattern, Note
+from pattern import Pattern
+from note import Note
 from binary_utilities import read_pattern, write_binary
 from wave import preview_pattern
 from utils import create_folder
