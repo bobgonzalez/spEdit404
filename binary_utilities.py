@@ -1,5 +1,6 @@
 import constants
-from track import Pattern, Note
+from pattern import Pattern
+from note import Note
 from utils import add_padding
 
 import binascii
@@ -16,9 +17,7 @@ def write_binary(pattern, bank_letter, pad_number):
 
 
 def get_sorted_notes(pattern):
-    notes = []
-    for track in pattern.tracks:
-        notes += track.notes
+    notes = [track.notes for track in pattern.tracks for note in track.notes]
     notes = sorted(notes, key=lambda n: n.start_tick)
     return notes
 
@@ -39,7 +38,7 @@ def write_hex(out_file, hex_string):
 
 
 def write_note(note, next_note_start_tick):
-    #  TODO FIX EROR WHEN WRITING NOTE WHOSE HEX NEXT NOTE VALUE IS 3 DIGIT, NEEDS POST NOTE PADDING
+    #  TODO FIX ERROR WHEN WRITING NOTE WHOSE HEX NEXT NOTE VALUE IS 3 DIGIT, NEEDS POST NOTE PADDING
     velocity = add_padding(str(hex(note.velocity))[2:], 2)
     next_note = next_note_start_tick - note.start_tick
     if len(str(hex(next_note))[2:]) == 1:
