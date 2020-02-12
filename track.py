@@ -60,6 +60,13 @@ class Pattern:
             self.length = new_length
         raise ValueError('length must be between 1 and 99 bars')
 
+    def delete_all_tracks(self):
+        self.tracks = [Track(self.length) for i in range(NUMBER_OF_TRACKS)]
+
+    def delete_all_occurrences_of_note(self, bank, pad):
+        for track in self.tracks:
+            track.delete_all_occurrences_of_note(bank, pad)
+
 
 class Track:
     def __init__(self, length):
@@ -103,8 +110,6 @@ class Track:
                 bar = ['--' for i in range(FRAMES_PER_BAR)]
         return bar
 
-
-
     def add_note(self, new_note):
         if new_note.start_tick < self.length*constants.TICKS_PER_BAR:
             for note in self.notes:
@@ -117,6 +122,9 @@ class Track:
 
     def delete_note(self, note_index):
         self.notes.pop(note_index)
+
+    def delete_all_occurrences_of_note(self, bank, pad):
+        self.notes = list(filter(lambda note: note.bank != bank.lower() and note.pad != int(pad), self.notes))
 
     def notes_collide(self, new_note, note):
         return ((note.start_tick <= new_note.start_tick <= note.end_tick)

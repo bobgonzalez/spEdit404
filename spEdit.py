@@ -34,6 +34,17 @@ def delete_note_from_pattern(pattern):
     return pattern
 
 
+def delete_note_occurrences_from_pattern(pattern):
+    bank, pad = get_user_input(['bank', 'pad'])
+    pattern.delete_all_occurrences_of_note(bank, pad)
+    return pattern
+
+
+def delete_all_notes_from_pattern(pattern):
+    pattern.delete_all_tracks()
+    return pattern
+
+
 def change_pattern_length(pattern):
     pattern.change_length = int(input('enter number of bars > '))
     return pattern
@@ -72,6 +83,8 @@ action_map = {
     'w': write_pattern_to_file,
     'l': change_pattern_length,
     'd': delete_note_from_pattern,
+    'dn': delete_note_occurrences_from_pattern,
+    'da': delete_all_notes_from_pattern,
     'p': play_pattern,
     'x': exit,
 }
