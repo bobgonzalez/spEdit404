@@ -1,13 +1,6 @@
 from pattern import Pattern
-from note import Note
-
+from tests.test_utils import create_dumb_note
 import unittest
-
-
-def create_dumb_note(**kwargs):
-    return Note(pad=kwargs.get('pad', 1), bank=kwargs.get('bank', 'a'),
-                start_tick=kwargs.get('start_tick', 0), length=kwargs.get('length', 60),
-                velocity=kwargs.get('velocity', 127))
 
 
 class TestNote(unittest.TestCase):
@@ -40,6 +33,7 @@ class TestPattern(unittest.TestCase):
     # TODO test setting and changing pattern length out of bounds 0<x<99
     # TODO test note collision when new note starts or ends in existing note
     # TODO test note collision when existing note starts or ends in new note
+    # TODO test delete all notes and all occurrences of a note
 
     def set_up(self):
         self.pattern = Pattern(1)
