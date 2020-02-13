@@ -1,6 +1,6 @@
 from pattern import Pattern
 from note import Note
-from binary_utilities import read_pattern, write_binary
+from binary_utilities import read_pattern, write_pattern
 from wave import preview_pattern
 from utils import create_folder
 
@@ -59,7 +59,7 @@ def read_pattern_from_file(pattern):
 
 def write_pattern_to_file(pattern):
     bank, pad = get_user_input(['bank', 'pad'])
-    write_binary(pattern, bank, pad)
+    write_pattern(pattern, bank, pad)
     return pattern
 
 

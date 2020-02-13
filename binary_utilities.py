@@ -7,7 +7,7 @@ import binascii
 from itertools import islice
 
 
-def write_binary(pattern, bank_letter, pad_number):
+def write_pattern(pattern, bank_letter, pad_number):
     output_binary_path = f'./export/PTN00{get_pad_code(bank_letter, pad_number)}.BIN'
     with open(output_binary_path, 'wb') as output_binary:
         notes = get_sorted_notes(pattern)
