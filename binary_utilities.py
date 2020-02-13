@@ -17,7 +17,7 @@ def write_binary(pattern, bank_letter, pad_number):
 
 
 def get_sorted_notes(pattern):
-    notes = [track.notes for track in pattern.tracks for note in track.notes]
+    notes = [note for track in pattern.tracks for note in track.notes]
     notes = sorted(notes, key=lambda n: n.start_tick)
     return notes
 
