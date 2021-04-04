@@ -74,7 +74,7 @@ def get_bar_code(pattern):
 def get_pad_code(bank_letter, pad_number):
     bank = ord(bank_letter.lower()) - constants.ascii_character_offset
     code = str(hex((bank * constants.pads_per_bank) + int(pad_number)))[2:]
-    return add_padding(code, 3)
+    return add_padding(int(code, 16), 3)
 
 
 def gen_pad_bank(pad_code, bank_switch):
